@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.ftn.uns.ac.rs/booking" xmlns:bo="http://www.ftn.uns.ac.rs/booking">
+    <xs:simpleType name="Uloga">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REGISTER"/>
+            <xs:enumeration value="ADMIN"/>
+            <xs:enumeration value="AGENT"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Kategorija">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Nekategorisan"/>
+            <xs:enumeration value="Jedan"/>
+            <xs:enumeration value="Dva"/>
+            <xs:enumeration value="Tri"/>
+            <xs:enumeration value="Četiri"/>
+            <xs:enumeration value="Pet"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TipSmestaja">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HOTEL"/>
+            <xs:enumeration value="APARTMAN"/>
+            <xs:enumeration value="BEDandBREAKFAST"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="Korisnik" abstract="true">
+        <xs:sequence>
+            <xs:element name="ID" type="xs:long"/>
+            <xs:element name="Ime" type="xs:string"/>
+            <xs:element default="" name="Prezime" type="xs:string"/>
+            <xs:element name="E-mail" type="xs:string"/>
+            <xs:element name="Lozinka" type="xs:string"/>
+            <xs:element name="Telefon" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType abstract="true" name="Agent">
+        <xs:complexContent>
+            <xs:extension base="bo:Korisnik">
+                <xs:attribute name="pmbr" type="xs:string"/>
+                <xs:attribute default="AGENT" name="Vrsta" type="bo:Uloga"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType abstract="true" name="Admin">
+        <xs:complexContent>
+            <xs:extension base="bo:Korisnik">
+                <xs:attribute default="ADMIN" name="Vrsta" type="bo:Uloga"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType abstract="true" name="RegistrovaniKorisnik">
+        <xs:complexContent>
+            <xs:extension base="bo:Korisnik">
+                <xs:attribute default="REGISTER" name="Vrsta" type="bo:Uloga"/>
+                <xs:attribute name="Blok" type="xs:boolean"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Poruka">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Primalac" type="bo:Korisnik"/>
+                <xs:element name="Posiljalac" type="bo:Korisnik"/>
+                <xs:element name="Sadrzaj" type="xs:string"/>
+                <xs:element name="DatumPoruke" type="xs:date"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Smestaj">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Naziv" type="xs:string"/>
+                <xs:element name="Lokacija" type="xs:string"/>
+                <xs:element name="Opis" type="xs:string"/>
+                <xs:element name="TipSmestaja">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="bo:TipSmestaja">
+                                <xs:attribute name="Parking" type="xs:boolean"/>
+                                <xs:attribute name="Wifi" type="xs:boolean"/>
+                                <xs:attribute name="Dorucak" type="xs:boolean"/>
+                                <xs:attribute name="Polupansion" type="xs:boolean"/>
+                                <xs:attribute name="Pansion" type="xs:boolean"/>
+                                <xs:attribute name="Tv" type="xs:boolean"/>
+                                <xs:attribute name="Minikuhinja" type="xs:boolean"/>
+                                <xs:attribute name="Kuhinja" type="xs:boolean"/>
+                                <xs:attribute name="PrivatnoKupatilo" type="xs:boolean"/>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="PonudaSmestaja">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="DatumOd" type="xs:date"/>
+                <xs:element name="DatumDo" type="xs:date"/>
+                <xs:element name="Cena" type="xs:integer"/>
+                <xs:element name="BrojMesta" type="xs:integer"/>
+                <xs:element name="BrojZauzetih" type="xs:integer"/>
+                <xs:element ref="bo:Smestaj"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Rezervacija">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="User" type="bo:Korisnik"/>
+            </xs:sequence>
+            <xs:attribute name="Datum" type="xs:date"/>
+            <xs:attribute name="Uspesno" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
